@@ -1,20 +1,32 @@
+import { seedContacts } from "./seedContacts";
 import type { Contact } from "./types";
 
 export const CONTACTS_STORAGE_KEY = "circle-of-friends:contacts";
+
+function normalizeContacts(contacts: Contact[]): Contact[] {
+  return contacts.map((contact) => ({
+    ...contact,
+    notes: Array.isArray(contact.notes) ? contact.notes : [],
+  }));
+}
 
 export function loadContacts(): Contact[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(CONTACTS_STORAGE_KEY);
-    if (!raw) return [];
+    if (!raw) {
+      saveContacts(seedContacts);
+      return normalizeContacts(seedContacts);
+    }
     const parsed = JSON.parse(raw) as Contact[];
-    if (!Array.isArray(parsed)) return [];
-    return parsed.map((contact) => ({
-      ...contact,
-      notes: Array.isArray(contact.notes) ? contact.notes : [],
-    }));
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      saveContacts(seedContacts);
+      return normalizeContacts(seedContacts);
+    }
+    return normalizeContacts(parsed);
   } catch {
-    return [];
+    saveContacts(seedContacts);
+    return normalizeContacts(seedContacts);
   }
 }
 
