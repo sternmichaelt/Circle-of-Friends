@@ -15,6 +15,7 @@ import {
   FileText,
   Trash2,
 } from "lucide-react";
+import CirclesDiagram from "@/components/CirclesDiagram";
 import { generateId } from "@/lib/ids";
 import { loadContacts, saveContacts } from "@/lib/storage";
 import { tierDefinitions } from "@/lib/tiers";
@@ -365,78 +366,15 @@ export default function RelationshipCircles() {
       </div>
 
       {viewMode === "circles" && (
-        <div
-          className="relative flex flex-col items-center justify-center mb-6 mt-4 mx-auto"
-          style={{ height: "min(600px, 90vw)", width: "min(600px, 90vw)" }}
-        >
-          <div className="relative w-full h-full">
-            <div
-              className="absolute top-0 left-0 w-full h-full rounded-full"
-              style={{ backgroundColor: tierDefinitions[3].color, opacity: 1 }}
-            >
-              <span className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 font-bold">
-                {tierDefinitions[3].name}
-              </span>
-              <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 font-bold text-xl">
-                {tierCounts[3] || 0}
-              </span>
-            </div>
-
-            <div
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{
-                backgroundColor: tierDefinitions[2].color,
-                opacity: 1,
-                width: "75%",
-                height: "75%",
-                border: "4px solid white",
-              }}
-            >
-              <span className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 font-bold">
-                {tierDefinitions[2].name}
-              </span>
-              <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 font-bold text-xl">
-                {tierCounts[2] || 0}
-              </span>
-            </div>
-
-            <div
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{
-                backgroundColor: tierDefinitions[1].color,
-                opacity: 1,
-                width: "50%",
-                height: "50%",
-                border: "4px solid white",
-              }}
-            >
-              <span className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 font-bold">
-                {tierDefinitions[1].name}
-              </span>
-              <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 font-bold text-xl">
-                {tierCounts[1] || 0}
-              </span>
-            </div>
-
-            <div
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{
-                backgroundColor: tierDefinitions[0].color,
-                opacity: 1,
-                width: "25%",
-                height: "25%",
-                border: "4px solid white",
-              }}
-            >
-              <span className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 font-bold">
-                {tierDefinitions[0].name}
-              </span>
-              <span className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 font-bold text-xl">
-                {tierCounts[0] || 0}
-              </span>
-            </div>
-          </div>
-        </div>
+        <CirclesDiagram
+          contacts={contacts}
+          tierCounts={tierCounts}
+          onSelectContact={setSelectedContactId}
+          onFlipToStacked={(tierIndex) => {
+            setExpandedRects({ [tierIndex]: true });
+            setViewMode("rectangles");
+          }}
+        />
       )}
 
       {viewMode === "rectangles" && (
